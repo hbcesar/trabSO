@@ -4,6 +4,25 @@
 #include <unistd.h>
 #define MAXIMO 100
 
+void gerenciadorProcessos(char* comandos, int n){
+	Lista* lista = NULL;
+	int i, pid;
+	pid=fork();
+
+	if(pid = 0){
+		printf("Sou o gerenciador");
+		for(i=0; i<n; i++){
+			pid = fork();
+			if(pid != 0){
+				lista = insereLista(lista, pid, comando[i]);
+			} else {
+				//sou o filho executo algo em background
+			}
+
+		}
+	}
+}
+
 //Referencia: http://manpages.ubuntu.com/manpages/precise/pt/man3/getcwd.3.html
 void pwd(){
 	char diretorio[100];

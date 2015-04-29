@@ -5,6 +5,7 @@
 #include "TADfuncoesShell.h"
 #define MAXIMO 100
 
+//Referencia: http://stackoverflow.com/questions/3919009/how-to-read-from-stdin-with-fgets
 char* leLinhaDeComando(){
 	char* comando = (char*)malloc(MAXIMO*sizeof(char));
 
