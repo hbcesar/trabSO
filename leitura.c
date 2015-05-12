@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "TADleitura.h"
 #include "TADfuncoesShell.h"
 #define MAXIMO 100
@@ -33,18 +34,42 @@ int quebraLinhaDeComando(char* linha_de_comando, char** comandos, char* divisor)
   	return i;
 }
 
-void executaComandos(char** comandos, int n){
-	int i, k;
-	char** argumentos = (char**)malloc(10*sizeof(char*));
+//Retirada de: http://stackoverflow.com/questions/1515195/how-to-remove-n-or-t-from-a-given-string-in-c
+//(confesso que demorei quase 1h pra entender esse função)
+void retiraQuebra(char* s){
+	char *p2 = s;
+    while(*s != '\0') {
+    	if(*s != '\t' && *s != '\n') {
+    		*p2++ = *s++;
+    	} else {
+    		++s;
+    	}
+    }
+    *p2 = '\0';
+}
 
+
+void executaComandos(char** comandos, int n){
+	int i, k, size;
+	char** argumentos = (char**)malloc(10*sizeof(char*));
 
 	for(i=0; i<n; i++){
 		k = quebraLinhaDeComando(comandos[i], argumentos, " "); //quebra os argumentos entre um @ e outro
-		if(strcmp(argumentos[0], "pwd\n") == 0){
+		retiraQuebra(argumentos[k-1]); //como o ultimo argumento vem com \n, chama essa funcao pra retira-lo
+		if(strcmp(argumentos[0], "pwd") == 0){
 			pwd();
+			return;
 		} 
 		else if(strcmp(argumentos[0], "cd") == 0){
 			cd(argumentos[1]);
+			return;
 		}
+		else{
+			gerenciadorProcessos(argumentos);
+		}
+
+
+		 //printf("%d\n", execv(argumentos[0], argumentos));
+
 	}
 }

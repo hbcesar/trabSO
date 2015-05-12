@@ -3,5 +3,6 @@
 
 void pwd(void);
 void cd(char* dir);
+void gerenciadorProcessos(char** comandos);
 
 #endif
