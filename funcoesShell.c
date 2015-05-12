@@ -10,8 +10,6 @@ void gerenciadorProcessos(char** comandos){
 	Lista* lista = NULL;
 	int i, pid;
 
-	printf("beleza fera?\n");
-
 	pid=fork();
 
 	if(pid < 0){
@@ -24,6 +22,7 @@ void gerenciadorProcessos(char** comandos){
 		if( execvp(comandos[0],comandos) == -1){ //Referencia: http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
 			printf("Não foi possivel iniciar processo, comando inválido.\n");
 			//raise(SIGKILL);
+		}
 	} else{
 		//sou o pai, vou inserir o pid do filho  na lista
 		lista = insereLista(lista, pid, comandos[0]);

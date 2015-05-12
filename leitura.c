@@ -35,7 +35,7 @@ int quebraLinhaDeComando(char* linha_de_comando, char** comandos, char* divisor)
 }
 
 //Retirada de: http://stackoverflow.com/questions/1515195/how-to-remove-n-or-t-from-a-given-string-in-c
-//(confesso que demorei quase 1h pra entender esse função)
+//nenhuma alteração foi feita
 void retiraQuebra(char* s){
 	char *p2 = s;
     while(*s != '\0') {
@@ -50,12 +50,20 @@ void retiraQuebra(char* s){
 
 
 void executaComandos(char** comandos, int n){
-	int i, k, size;
+	int i, j, k, size;
 	char** argumentos = (char**)malloc(10*sizeof(char*));
 
 	for(i=0; i<n; i++){
+		/*
+		 * seta as casas do vetor argumentos para null
+		 * isso evita que argumentos do loop anterior sejam passados como parametro do novo argumento
+		 */
+		for(j=0; j<5; j++){
+			argumentos[i] = NULL;
+		}
 		k = quebraLinhaDeComando(comandos[i], argumentos, " "); //quebra os argumentos entre um @ e outro
 		retiraQuebra(argumentos[k-1]); //como o ultimo argumento vem com \n, chama essa funcao pra retira-lo
+		
 		if(strcmp(argumentos[0], "pwd") == 0){
 			pwd();
 			return;
@@ -67,9 +75,5 @@ void executaComandos(char** comandos, int n){
 		else{
 			gerenciadorProcessos(argumentos);
 		}
-
-
-		 //printf("%d\n", execv(argumentos[0], argumentos));
-
 	}
 }
