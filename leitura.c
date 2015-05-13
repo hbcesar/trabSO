@@ -4,7 +4,11 @@
 #include <unistd.h>
 #include "TADleitura.h"
 #include "TADfuncoesShell.h"
+#include "TADestruturaLista.h"
+#include "TADgerente.h"
 #define MAXIMO 100
+
+Lista* lista = NULL;
 
 //Referencia: http://stackoverflow.com/questions/3919009/how-to-read-from-stdin-with-fgets
 char* leLinhaDeComando(){
@@ -50,8 +54,10 @@ void retiraQuebra(char* s){
 
 
 void executaComandos(char** comandos, int n){
-	int i, j, k, size;
+	//Lista* lista = NULL;
+	int i, j, k, size, pid=0;
 	char** argumentos = (char**)malloc(10*sizeof(char*));
+	char bg = '&';
 
 	for(i=0; i<n; i++){
 		/*
@@ -62,6 +68,11 @@ void executaComandos(char** comandos, int n){
 			argumentos[i] = NULL;
 		}
 		k = quebraLinhaDeComando(comandos[i], argumentos, " "); //quebra os argumentos entre um @ e outro
+		if (k>5){
+			printf("Número máximo de argumentos excedido para o comando %s.\n", argumentos[0]);
+			continue;
+		}
+
 		retiraQuebra(argumentos[k-1]); //como o ultimo argumento vem com \n, chama essa funcao pra retira-lo
 		
 		if(strcmp(argumentos[0], "pwd") == 0){
@@ -73,7 +84,11 @@ void executaComandos(char** comandos, int n){
 			return;
 		}
 		else{
-			gerenciadorProcessos(argumentos);
+			//argumentos[k] = &bg;
+			pid = gerenciadorProcessos(argumentos);
+			lista = insereLista(lista, pid);
 		}
 	}
+
 }
+

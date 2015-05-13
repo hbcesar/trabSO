@@ -1,0 +1,1 @@
+int gerenciadorProcessos(char** comandos);

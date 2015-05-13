@@ -3,26 +3,32 @@
 #include <string.h>
 #include "TADestruturaLista.h"
 
-Lista* criaItem(int pid, char* comando){
+
+struct listinha
+{
+	int pid;
+	struct listinha* proximo;
+};
+
+Lista* criaItem(int pid){
 	Lista* novo = (Lista*)malloc(sizeof(Lista));
 
 	novo->pid = pid;
-	novo->comando = (char*)malloc((strlen(comando)+1)*sizeof(char));
-	strcpy(novo->comando, comando);
 	novo->proximo = NULL;
 
 	return novo;
 }
 
-Lista* insereLista(Lista* primeiro, int pid, char* comando){
+Lista* insereLista(Lista* primeiro, int pid){
 	Lista* aux = primeiro;
 
 	if(primeiro != NULL){
-		while(aux->proximo != NULL)
+		while(aux->proximo != NULL){
 			aux = aux->proximo;
-		aux->proximo = criaItem(pid, comando);
+		}
+		aux->proximo = criaItem(pid);
 	} else{
-		primeiro = criaItem(pid, comando);
+		primeiro = criaItem(pid);
 	}
 
 	return primeiro;
@@ -58,4 +64,13 @@ Lista* remover(Lista* primeiro, int pid){
 	}
 
 	return primeiro;
+}
+
+void imprimeLista(Lista* lista){
+	Lista* aux = lista;
+
+	while(aux != NULL){
+		printf("PID: %d\n", aux->pid);
+		aux = aux->proximo;
+	}
 }
