@@ -4,11 +4,7 @@
 #include "TADestruturaLista.h"
 
 
-struct listinha
-{
-	int pid;
-	struct listinha* proximo;
-};
+
 
 Lista* criaItem(int pid){
 	Lista* novo = (Lista*)malloc(sizeof(Lista));

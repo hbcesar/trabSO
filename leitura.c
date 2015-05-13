@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include "TADleitura.h"
 #include "TADfuncoesShell.h"
 #include "TADestruturaLista.h"
@@ -92,3 +93,11 @@ void executaComandos(char** comandos, int n){
 
 }
 
+void matarTodosProcessos(){ 
+	Lista* aux = lista; 
+
+	while(aux != NULL){ 
+		//kill(aux->pid, SIGKILL); 
+		aux = aux->proximo; 
+	}
+}

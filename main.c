@@ -5,21 +5,15 @@
 #include <unistd.h>
 #include "TADleitura.h"
 #include "TADestruturaLista.h"
-
-void tratarSIGTSTP(){
-	printf("Não adianta tentar suspender... minha família de processos está protegida!");
-}
+#include "TADgerente.h"
 
 int main(){
-	signal( SIGINT, tratamento_SIGINT); 
-	signal(SIGTSTP, tratarSIGTSTP);
-
 	int i;
 	char* linha_de_comando;
 	char** comandos = (char**)malloc(10*sizeof(char*));
 
-
-
+	// ignora o sinal ctrl-Z via terminal.
+	signal(SIGTSTP, SIG_IGN);		
 
 	while(1){
 		linha_de_comando = leLinhaDeComando();

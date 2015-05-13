@@ -4,6 +4,12 @@
 /* define tipo lista */
 typedef struct listinha Lista;
 
+struct listinha
+{
+	int pid;
+	Lista* proximo;
+};
+
 
 /* cria um item da lista
  * input: um inteiro correspondende ao pid do processo e uma string correspondente ao comando
