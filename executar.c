@@ -8,7 +8,7 @@
 #include "TADfuncoesShell.h"
 #include "TADestruturaLista.h"
 #include "TADgerente.h"
-#define MAXIMO 100
+#include "TADexecutar.h"
 
 Lista* lista = NULL;
 
@@ -37,9 +37,6 @@ void tratadorSinal(int sig){
 		//matarTodosProcessos(); 
 	}
 }
-
-
-
 
 void executaComandos(char** comandos, int n){
 	//Lista* lista = NULL;

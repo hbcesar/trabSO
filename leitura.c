@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "TADleitura.h"
+#define MAXIMO 100
 
 //Referencia: http://stackoverflow.com/questions/3919009/how-to-read-from-stdin-with-fgets
 char* leLinhaDeComando(){
@@ -15,7 +16,6 @@ char* leLinhaDeComando(){
 
 //Referencia: https://support.microsoft.com/en-us/kb/51327/pt-br
 int quebraLinhaDeComando(char* linha_de_comando, char** comandos, char* divisor){
-		signal(SIGTSTP, tratadorSinal);
 
 	char* partes;
 	int i = 0, j;
