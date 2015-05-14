@@ -7,7 +7,7 @@
 #include "TADestruturaLista.h"
 #include "TADgerente.h"
 
-void tratadorSinal(int sig){
+void tratadorMain(int sig){
 	
 	if(sig == SIGINT){
 		// bloqueia o sinal ctrl-C via terminal
@@ -17,8 +17,10 @@ void tratadorSinal(int sig){
 	}
 	
 	if(sig == SIGTSTP){
-		//imprime a mensagem
-		printf("Não adianta tentar suspender... minha família de processos está protegida!\n");
+		printf("Sou o processo %d\n", getpid());
+
+		//suspende os filhos
+		suspenderTodosProcessos();
 
 		// ignora o sinal ctrl-Z via terminal.
 		signal(sig, SIG_IGN);
@@ -29,14 +31,15 @@ void tratadorSinal(int sig){
 	}
 }
 
+
 int main(){
 	int i;
 	char* linha_de_comando;
 	char** comandos = (char**)malloc(10*sizeof(char*));
 
 	// ignora o sinal ctrl-Z  e ctrl-C via terminal.
-	signal(SIGINT, tratadorSinal);
-	signal(SIGTSTP, tratadorSinal);
+	signal(SIGINT, tratadorMain);
+	signal(SIGTSTP, tratadorMain);
 
 	for(;;){
 		linha_de_comando = leLinhaDeComando();

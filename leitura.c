@@ -12,6 +12,32 @@
 
 Lista* lista = NULL;
 
+void tratadorSinal(int sig){
+	
+	if(sig == SIGINT){
+		// bloqueia o sinal ctrl-C via terminal
+		printf("Vou sair só prq sou bonzinho, queridinha\n");
+		//signal(sig, SIG_IGN);
+		exit(0);
+	}
+	
+	if(sig == SIGTSTP){
+		//imprime a mensagem
+		printf("Não adianta tentar suspender... minha família de processos está protegida!\n");
+		printf("Sou o processo %d\n", getpid());
+
+		//suspende os filhos
+		suspenderTodosProcessos();
+
+		// ignora o sinal ctrl-Z via terminal.
+		signal(sig, SIG_IGN);
+	}
+
+	if(sig == SIGCHLD){ 
+		//matarTodosProcessos(); 
+	}
+}
+
 //Referencia: http://stackoverflow.com/questions/3919009/how-to-read-from-stdin-with-fgets
 char* leLinhaDeComando(){
 	char* comando = (char*)malloc(MAXIMO*sizeof(char));
@@ -69,6 +95,12 @@ void executaComandos(char** comandos, int n){
 		exit(1);
 	} else if (pid == 0){
 		printf("Sou o gerente, %d\n", getpid());
+
+		//seta novos tratadores de sinal
+		signal(SIGTSTP, tratadorSinal);
+		signal(SIGINT, tratadorSinal);
+
+
 		for(i=0; i<n; i++){
 			/*
 			 * seta as casas do vetor argumentos para null
@@ -106,12 +138,16 @@ void executaComandos(char** comandos, int n){
 				}
 			}
 		}
+
 		printf("imprimindo os filhos do gerente\n");
 		imprimeLista(lista);
+
 		//espera o termino dos filhos
-		wait(NULL);
-		//se um filho retornar, mata o resto todo
-		matarTodosProcessos();
+		wait(0);
+
+		//se um filho for killed, mata o resto todo
+
+		//matarTodosProcessos();
 	} else{
 		printf("Sou a bash, %d\n", getpid());
 		//aqui a bash mantem uma lista de todos os seus processos gerentes
@@ -143,3 +179,15 @@ void matarTodosProcessos(){
 
 	exit(1);
 }
+
+void suspenderTodosProcessos(){ 
+	Lista* aux = lista; 
+
+	while(aux != NULL){ 
+		kill(aux->pid, SIGTSTP);
+		aux = aux->proximo;
+	}
+
+	printf("Suspenderam todos os filhos de %d\n", getpid());
+}
+

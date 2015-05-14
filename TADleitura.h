@@ -20,6 +20,7 @@ void matarTodosProcessos();
 
 void esperar();
 
+void suspenderTodosProcessos();
 
 
 

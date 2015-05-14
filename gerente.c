@@ -6,6 +6,8 @@
 #include "TADestruturaLista.h"
 #define MAXIMO 100
 
+
+
 int gerenciadorProcessos(char** comandos){
 	int i, pid, exec;
 
@@ -16,11 +18,7 @@ int gerenciadorProcessos(char** comandos){
 		exit(1);
 	} else if (pid == 0){
 		printf("Sou o filho do gerente, %d\n", getpid());
-
-		// if(setsid() == -1){
-		// 	perror("Erro no setsid");
-		// 	exit(1);
-		// }
+		
 		//sou o filho
 		//TRATAR UNS SINAIS AQUI
 		//executa comando (esse if tem efeito colateral)
@@ -28,11 +26,10 @@ int gerenciadorProcessos(char** comandos){
 		exec = execvp(comandos[0],comandos);
 		if( exec == -1){ 
 				printf("Não foi possivel iniciar processo, comando inválido.\n");
-				return(-1);
+				exit(1);
 		}
 		//se processo for morto manda um sinal aqui, acho que é esse SIGKILL
 		//signal(SIGCHLD, tratadorSinal);
-
 		return 0;
 	}else{
 		//sou o pai, vou inserir o pid do filho  na lista
