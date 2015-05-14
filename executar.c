@@ -40,7 +40,7 @@ void tratadorSinal(int sig){
 
 void executaComandos(char** comandos, int n){
 	//Lista* lista = NULL;
-	int i, j, k, size, pid=0, pid_filhos=0;
+	int i, j, k, status, pid=0, pid_filhos=0;
 	char** argumentos = (char**)malloc(10*sizeof(char*));
 
 	//inicia gerente
@@ -82,12 +82,10 @@ void executaComandos(char** comandos, int n){
 			if(strcmp(argumentos[0], "pwd") == 0){
 				pwd();
 				return;
-			} 
-			else if(strcmp(argumentos[0], "cd") == 0){
+			} else if(strcmp(argumentos[0], "cd") == 0){
 				cd(argumentos[1]);
 				return;
-			}
-			else{
+			} else{
 				pid = gerenciadorProcessos(argumentos);
 				if(pid > 0){
 					lista = insereLista(lista, pid);
@@ -99,11 +97,12 @@ void executaComandos(char** comandos, int n){
 		imprimeLista(lista);
 
 		//espera o termino dos filhos
-		wait(0);
+		status = wait(0);
 
 		//se um filho for killed, mata o resto todo
-
-		//matarTodosProcessos();
+		if(WIFSIGNALED(status)){
+			matarTodosProcessos();
+		}
 	} else{
 		printf("Sou a bash, %d\n", getpid());
 		//aqui a bash mantem uma lista de todos os seus processos gerentes
