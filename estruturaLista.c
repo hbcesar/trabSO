@@ -3,10 +3,8 @@
 #include <string.h>
 #include "TADestruturaLista.h"
 
-
-
-
 Lista* criaItem(int pid){
+	int i;
 	Lista* novo = (Lista*)malloc(sizeof(Lista));
 
 	novo->pid = pid;

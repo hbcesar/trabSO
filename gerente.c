@@ -22,7 +22,7 @@ void tratadorSinal(int sig){
 	}
 
 	if(sig == SIGCHLD){ 
-		matarTodosProcessos(); 
+		//matarTodosProcessos(); 
 	}
 }
 
@@ -31,24 +31,28 @@ int gerenciadorProcessos(char** comandos){
 
 	pid=fork();
 	
-	signal(SIGTSTP, tratadorSinal);
-
-
 	if(pid < 0){
 		perror("Erro na criação de processo:");
 		exit(1);
 	} else if (pid == 0){
-		if(setsid() == -1)
-			perror("Erro no setsid");
+		printf("Sou o filho do gerente, %d\n", getpid());
+
+		// if(setsid() == -1){
+		// 	perror("Erro no setsid");
+		// 	exit(1);
+		// }
 		//sou o filho
 		//TRATAR UNS SINAIS AQUI
 		//executa comando (esse if tem efeito colateral)
+		//Referencia: http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
 		exec = execvp(comandos[0],comandos);
-		if( exec == -1){ //Referencia: http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
+		if( exec == -1){ 
 				printf("Não foi possivel iniciar processo, comando inválido.\n");
+				return(-1);
 		}
 		//se processo for morto manda um sinal aqui, acho que é esse SIGKILL
-		signal(SIGCHLD, tratadorSinal);
+		//signal(SIGCHLD, tratadorSinal);
+
 		return 0;
 	}else{
 		//sou o pai, vou inserir o pid do filho  na lista

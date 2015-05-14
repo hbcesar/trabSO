@@ -13,7 +13,7 @@ int main(){
 	char** comandos = (char**)malloc(10*sizeof(char*));
 
 	// ignora o sinal ctrl-Z via terminal.
-	signal(SIGTSTP, SIG_IGN);		
+	signal(SIGTSTP, tratadorSinal);
 
 	while(1){
 		linha_de_comando = leLinhaDeComando();

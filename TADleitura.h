@@ -16,7 +16,9 @@ int quebraLinhaDeComando(char* linha_de_comando, char** comandos, char* divisor)
  * output: nada */
 void executaComandos(char** comandos, int n);
 
-void tratarSIGSTP();
+void matarTodosProcessos();
+
+void esperar();
 
 
 

@@ -7,6 +7,7 @@ typedef struct listinha Lista;
 struct listinha
 {
 	int pid;
+	// int filhos[10];
 	Lista* proximo;
 };
 
