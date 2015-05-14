@@ -6,26 +6,6 @@
 #include "TADestruturaLista.h"
 #define MAXIMO 100
 
-void tratadorSinal(int sig){
-	
-	if(sig == SIGINT){
-		// bloqueia o sinal ctrl-C via terminal
-		signal(SIGINT, SIG_IGN);
-	}
-	
-	if(sig == SIGTSTP){
-		//imprime a mensagem
-		printf("Não adianta tentar suspender... minha família de processos está protegida!\n");
-
-		// ignora o sinal ctrl-Z via terminal.
-		signal(SIGTSTP, SIG_IGN);		
-	}
-
-	if(sig == SIGCHLD){ 
-		//matarTodosProcessos(); 
-	}
-}
-
 int gerenciadorProcessos(char** comandos){
 	int i, pid, exec;
 
