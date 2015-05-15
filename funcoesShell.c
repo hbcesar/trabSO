@@ -29,22 +29,23 @@ void cd(char* dir){
 	}
 }
 
-void waita() {
-	int pid, causa; // Funcao que libera os filhos no estado zombie
+void waita(){
+	printf("Fui chamada\n");
+	int pid, causa;
 
 	while( pid = waitpid( -1, &causa , WNOHANG) ){
 		if ( pid == -1 ) {
 			break;
 		
 		} else if ( pid == 0 ) {
-			printf("%d foi encontrado.\n", pid);
+			printf("Processo %d encontrado, porém nao está em estado zumbi.\n", pid);
 		
 		} else {
 			if( WIFEXITED(causa) ) {
-				printf("%d MORREU: %d\n", pid, WEXITSTATUS(causa) ); 
+				printf("O processo %d foi terminado, causa: %d\n", pid, WEXITSTATUS(causa) ); 
 			}
 			else if ( WIFSIGNALED(causa) ) { 
-				printf("%d MORREU: %d\n", pid, WTERMSIG(causa) );
+				printf("O processo %d foi terminado, causa: %d\n", pid, WTERMSIG(causa) );
 			}		
 		}		
 	}

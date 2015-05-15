@@ -23,8 +23,8 @@ int gerenciadorProcessos(char** comandos){
 		//Referencia: http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
 		exec = execvp(comandos[0],comandos);
 		if( exec == -1){ 
-				printf("Não foi possivel iniciar processo, comando inválido.\n");
-				abort();
+			printf("Não foi possivel iniciar processo, comando inválido.\n");
+			abort();
 		}
 		//se processo for morto manda um sinal aqui, acho que é esse SIGKILL
 		//signal(SIGCHLD, tratadorSinal);
