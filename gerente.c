@@ -6,8 +6,6 @@
 #include "TADestruturaLista.h"
 #define MAXIMO 100
 
-
-
 int gerenciadorProcessos(char** comandos){
 	int i, pid, exec;
 
@@ -26,7 +24,7 @@ int gerenciadorProcessos(char** comandos){
 		exec = execvp(comandos[0],comandos);
 		if( exec == -1){ 
 				printf("Não foi possivel iniciar processo, comando inválido.\n");
-				exit(1);
+				abort();
 		}
 		//se processo for morto manda um sinal aqui, acho que é esse SIGKILL
 		//signal(SIGCHLD, tratadorSinal);

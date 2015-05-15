@@ -8,7 +8,7 @@ void executaComandos(char** comandos, int n);
 
 void matarTodosProcessos();
 
-void esperar();
+void esperar(int status);
 
 void suspenderTodosProcessos();
 

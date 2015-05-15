@@ -11,4 +11,6 @@ char* leLinhaDeComando();
  * output: um inteiro positivo para informar quantos comandos foram lidos */
 int quebraLinhaDeComando(char* linha_de_comando, char** comandos, char* divisor);
 
+void retiraQuebra(char* s);
+
 #endif

@@ -6,6 +6,7 @@
 #include "TADleitura.h"
 #include "TADestruturaLista.h"
 #include "TADgerente.h"
+#include "TADexecutar.h"
 
 void tratadorMain(int sig){
 	

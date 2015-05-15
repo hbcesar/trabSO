@@ -40,7 +40,7 @@ void tratadorSinal(int sig){
 
 void executaComandos(char** comandos, int n){
 	//Lista* lista = NULL;
-	int i, j, k, status, pid=0, pid_filhos=0;
+	int i, j, k, status, saida=65280, pid=0, pid_filhos=0;
 	char** argumentos = (char**)malloc(10*sizeof(char*));
 
 	//inicia gerente
@@ -86,23 +86,15 @@ void executaComandos(char** comandos, int n){
 				cd(argumentos[1]);
 				return;
 			} else{
-				pid = gerenciadorProcessos(argumentos);
-				if(pid > 0){
-					lista = insereLista(lista, pid);
-				}
+				pid_filhos = gerenciadorProcessos(argumentos);
+				lista = insereLista(lista, pid_filhos);
 			}
 		}
 
-		printf("imprimindo os filhos do gerente\n");
+		printf("imprimindo os filhos do gerente %d \n", getpid());
 		imprimeLista(lista);
 
-		//espera o termino dos filhos
-		status = wait(0);
-
-		//se um filho for killed, mata o resto todo
-		if(WIFSIGNALED(status)){
-			matarTodosProcessos();
-		}
+		wait(0);
 	} else{
 		printf("Sou a bash, %d\n", getpid());
 		//aqui a bash mantem uma lista de todos os seus processos gerentes
@@ -112,13 +104,14 @@ void executaComandos(char** comandos, int n){
 	}
 }
 
-void esperar(){
-	Lista* aux = lista;
-
-	while(aux != NULL){ 
-		wait(&aux->pid); 
-		aux = aux->proximo; 
+void esperar(int status){
+	//se um filho for killed, mata o resto todo
+	while(!WIFSIGNALED(status)){
+		status = wait(0);
 	}
+	
+	//printf("%d\n", status);
+	matarTodosProcessos();
 }
 
 void matarTodosProcessos(){ 
@@ -132,7 +125,7 @@ void matarTodosProcessos(){
 
 	printf("Morreram todos os filhos de %d", getpid());
 
-	exit(1);
+	exit(0);
 }
 
 void suspenderTodosProcessos(){ 
