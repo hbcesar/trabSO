@@ -3,11 +3,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
-#include "TADestruturaLista.h"
-#include "TADexecutar.h"
+#include "TADgerente.h"
 #define MAXIMO 100
 
-
+/*
+ * Esse bloco do programa executa processos externamente
+ * Para a construção dessa função, consultamos a seguinte fonte:
+ * http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
+ */
 void gerenciadorProcessos(char** comandos){
 	int i, pid, exec;
 
@@ -18,7 +21,6 @@ void gerenciadorProcessos(char** comandos){
 		exit(1);
 	} else if (pid == 0){
 
-		//Referencia: http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html
 		exec = execvp(comandos[0],comandos);
 		if( exec == -1){ 
 			printf("Não foi possivel iniciar processo, comando inválido.\n");

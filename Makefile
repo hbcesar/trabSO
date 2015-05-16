@@ -1,5 +1,4 @@
 all: METODOS
-	./executavel
 
 METODOS:
 	gcc -c estruturaLista.c

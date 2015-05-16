@@ -4,6 +4,7 @@
 void pwd(void);
 void cd(char* dir);
 void waita();
+void exitar();
 
 
 #endif

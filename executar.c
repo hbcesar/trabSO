@@ -11,16 +11,8 @@
 #include "TADgerente.h"
 #include "TADexecutar.h"
 
-Lista* lista = NULL;
-
+//tratador de sinal para os processos gerentes
 void tratadorSinal(int sig){
-	
-	if(sig == SIGINT){
-		// bloqueia o sinal ctrl-C via terminal
-		printf("Vou sair só prq sou bonzinho, queridinha\n");
-		//signal(sig, SIG_IGN);
-		exit(0);
-	}
 	
 	if(sig == SIGTSTP){
 		//imprime a mensagem
@@ -31,7 +23,15 @@ void tratadorSinal(int sig){
 	}
 }
 
-void executaComandos(char** comandos, int n){
+/*
+ * A função a seguir recebe um vetor com comandos a serem executados
+ * Neste caso, cada vetor contem os comando e seus parâmetros.
+ * Por exemplo, no caso de: firefox www.google.com @ gedit novo.txt
+ * o vetor conterá:
+ * comandos[0] = "firefox www.google.com " e comandos[1] = "gedit novo.txt"
+ * Por isso, é criado um novo vetor argumentos, que cada casa de comandos em subvetores.
+ */
+Lista* executaComandos(Lista* lista, char** comandos, int n){
 	int j=0, i=0, pid, k, grupo;
 	char** argumentos = (char**)malloc(10*sizeof(char*));
 
@@ -45,24 +45,26 @@ void executaComandos(char** comandos, int n){
 	//verifica se o numero de argumentos é permitido
 	if(k > 5){
 		printf("Número máximo de argumentos excedido para o comando %s.\n", argumentos[0]);
-		return;
+		return lista;
 	}
 
 	//retira o \n do ultimo argumento
 	retiraQuebra(argumentos[k-1]);
 
+	//verifica se as funções sao padrões da shell
+	//caso contrário, executa o comando externamente
 	if(strcmp(argumentos[0], "pwd") == 0){
 		pwd();
-		return;
+		return lista;
 	}else if(strcmp(argumentos[0], "cd") == 0){
 		cd(argumentos[1]);
-		return;
+		return lista;
 	}else if(strcmp(argumentos[0], "waita") == 0){
 		waita();
-		return;
-	}else if(strcmp(argumentos[0], "imprimir") == 0){
-		imprimeLista(lista);
-		return;
+		return lista;
+	}else if(strcmp(argumentos[0], "exit") == 0){
+		exitar();
+		return lista;
 	}else{
 
 		//cria gerente 
@@ -79,8 +81,6 @@ void executaComandos(char** comandos, int n){
 
 			//trata os sinais
 			signal(SIGTSTP, tratadorSinal);
- 			signal(SIGINT, tratadorSinal);
- 			signal(SIGCHLD, tratadorSinal);
 
  			for(i=0; i<n; i++){	
  				//seta o todas as posições do vetor para null
@@ -93,20 +93,24 @@ void executaComandos(char** comandos, int n){
 				//verifica se o numero de argumentos é permitido
 				if(k > 5){
 					printf("Número máximo de argumentos excedido para o comando %s.\n", argumentos[0]);
-					return;
+					return lista;
 				}
 
 				//retira o \n do ultimo argumento
 				retiraQuebra(argumentos[k-1]);
 
+				//funcao que executa novos processos externamente
+				// essa fucnao está no arquivo gerente.c
 				gerenciadorProcessos(argumentos);
 
 			}
 
-			//assim que um filho morrer ele envia um sinal para matar todos do grupo
+			//assim que qualquer filho morrer, o gerente envia um sinal para matar todos do grupo
 			// o grupo tem o mesmo ID do pai (gerente)
 			wait(0);
 			grupo = getpid();
+			//esse comando serve para que o processo gerente, que irá morrer logo em seguida
+			//seja retirado da lista de processos da fsh
 			raise(SIGCHLD);
 			kill(-(grupo), SIGKILL);
 			exit(0);
@@ -117,19 +121,9 @@ void executaComandos(char** comandos, int n){
 			lista = insereLista(lista, pid);
 		}	
 	}
+
+	return lista;
 }
 
 
-void suspenderTodosProcessos(){ 
-	Lista* aux = lista; 
-
-	while(aux != NULL){ 
-		kill(aux->pid, SIGTSTP);
-		aux = aux->proximo;
-	}
-}
-
-void removerLista(int pid){
-	lista = remover(lista, pid);
-}
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include "TADestruturaLista.h"
 #define MAXIMO 100
 
@@ -30,20 +31,36 @@ void cd(char* dir){
 }
 
  void waita(){
-// 	int pid, causa;
+	int pid, causa;
 
-// 	while(pid = waitpid( -1, &causa , WNOHANG)){
-// 		if (pid == -1) {
-// 			break;
-// 		} else if (pid == 0){
-// 			printf("Processo %d encontrado, porém nao está em estado zumbi.\n", pid);
-// 		} else {
-// 			if(WIFEXITED(causa)) {
-// 				printf("O processo %d foi terminado, causa: %d\n", pid, WEXITSTATUS(causa) ); 
-// 			}
-// 			else if ( WIFSIGNALED(causa) ) { 
-// 				printf("O processo %d foi terminado, causa: %d\n", pid, WTERMSIG(causa) );
-// 			}		
-// 		}		
-// 	}
+	while((pid = waitpid( -1, &causa , WNOHANG))){
+		if (pid == -1) { //erro no wait
+			break;
+		} else {
+			if(WIFEXITED(causa)) { //se processo terminou espontaneamente
+				printf("O processo %d foi terminado, causa: %d\n", pid, WEXITSTATUS(causa));
+				kill(pid, SIGKILL);
+			}
+			else if (WIFSIGNALED(causa)) { //se processo recebeu sinal (teoricamente esse if nunca acontece para a fsh)
+				printf("O processo %d foi terminado, causa: %d\n", pid, WTERMSIG(causa));
+				kill(pid, SIGKILL);
+			}		
+		}		
+	}
+}
+
+/*
+ * envia comando kill para todos os gerentes
+ * os filhos deles sao herdados por init e entao também terminados
+ * ao fina, sai da fsh
+ */
+void exitar(Lista* lista){
+	Lista* aux = lista;
+
+	while(aux != NULL){ 
+		kill(aux->pid, SIGKILL);
+		aux = aux->proximo;
+	}
+
+	exit(0);
 }

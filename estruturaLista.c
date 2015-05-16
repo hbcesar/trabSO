@@ -3,6 +3,8 @@
 #include <string.h>
 #include "TADestruturaLista.h"
 
+//Este bloco do programa contém apenas funções padrões de controle de lista
+
 Lista* criaItem(int pid){
 	int i;
 	Lista* novo = (Lista*)malloc(sizeof(Lista));
