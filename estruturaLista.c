@@ -43,7 +43,7 @@ Lista* remover(Lista* primeiro, int pid){
 	Lista* anterior = NULL;
 
 	if(buscaProcesso(primeiro, pid) == NULL)
-		return NULL;
+		return primeiro;
 	else{
 		while(aux->pid != pid){
 			anterior = aux;

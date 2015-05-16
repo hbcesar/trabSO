@@ -6,10 +6,10 @@
  * output: nada */
 void executaComandos(char** comandos, int n);
 
-void matarTodosProcessos();
-
-void esperar(int status);
-
 void suspenderTodosProcessos();
+
+void tratadorSinal(int sig);
+
+void removerLista(int pid);
 
 #endif  

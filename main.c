@@ -12,23 +12,21 @@ void tratadorMain(int sig){
 	
 	if(sig == SIGINT){
 		// bloqueia o sinal ctrl-C via terminal
-		printf("Vou sair só prq sou bonzinho, queridinha\n");
 		//signal(sig, SIG_IGN);
 		exit(0);
 	}
 	
 	if(sig == SIGTSTP){
-		printf("Sou o processo %d\n", getpid());
-
-		//suspende os filhos
 		suspenderTodosProcessos();
 
-		// ignora o sinal ctrl-Z via terminal.
+		//ignora o sinal ctrl-Z via terminal.
 		signal(sig, SIG_IGN);
 	}
 
 	if(sig == SIGCHLD){ 
-		//matarTodosProcessos(); 
+		int pid;
+		pid = waitpid(-1, NULL, WNOHANG);
+		removerLista(pid);
 	}
 }
 
@@ -38,16 +36,16 @@ int main(){
 	char* linha_de_comando;
 	char** comandos = (char**)malloc(10*sizeof(char*));
 
-	// ignora o sinal ctrl-Z  e ctrl-C via terminal.
+	// trata o sinal ctrl-Z  e ctrl-C via terminal.
 	signal(SIGINT, tratadorMain);
 	signal(SIGTSTP, tratadorMain);
+	signal(SIGCHLD, tratadorMain);
 
 	for(;;){
 		linha_de_comando = leLinhaDeComando();
 		i = quebraLinhaDeComando(linha_de_comando, comandos, "@");
 		executaComandos(comandos, i);
 	}
-	scanf("%d", &i);
 
 	return 0;
 }

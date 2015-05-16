@@ -1,3 +1,3 @@
-int gerenciadorProcessos(char** comandos);
+void gerenciadorProcessos(char** comandos);
 
 void tratadorSinal(int sig);

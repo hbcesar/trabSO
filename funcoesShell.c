@@ -29,24 +29,21 @@ void cd(char* dir){
 	}
 }
 
-void waita(){
-	printf("Fui chamada\n");
-	int pid, causa;
+ void waita(){
+// 	int pid, causa;
 
-	while( pid = waitpid( -1, &causa , WNOHANG) ){
-		if ( pid == -1 ) {
-			break;
-		
-		} else if ( pid == 0 ) {
-			printf("Processo %d encontrado, porém nao está em estado zumbi.\n", pid);
-		
-		} else {
-			if( WIFEXITED(causa) ) {
-				printf("O processo %d foi terminado, causa: %d\n", pid, WEXITSTATUS(causa) ); 
-			}
-			else if ( WIFSIGNALED(causa) ) { 
-				printf("O processo %d foi terminado, causa: %d\n", pid, WTERMSIG(causa) );
-			}		
-		}		
-	}
+// 	while(pid = waitpid( -1, &causa , WNOHANG)){
+// 		if (pid == -1) {
+// 			break;
+// 		} else if (pid == 0){
+// 			printf("Processo %d encontrado, porém nao está em estado zumbi.\n", pid);
+// 		} else {
+// 			if(WIFEXITED(causa)) {
+// 				printf("O processo %d foi terminado, causa: %d\n", pid, WEXITSTATUS(causa) ); 
+// 			}
+// 			else if ( WIFSIGNALED(causa) ) { 
+// 				printf("O processo %d foi terminado, causa: %d\n", pid, WTERMSIG(causa) );
+// 			}		
+// 		}		
+// 	}
 }
